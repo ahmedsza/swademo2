@@ -7,7 +7,29 @@ import reportWebVitals from './reportWebVitals';
 
 
 
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+import { ReactPlugin, withAITracking } from '@microsoft/applicationinsights-react-js';
+import { createBrowserHistory } from "history";
 
+
+const browserHistory = createBrowserHistory({ basename: '' });
+var reactPlugin = new ReactPlugin();
+var appInsights = new ApplicationInsights({
+    config: {
+      connectionString: 'InstrumentationKey=65cc2975-3ad6-4198-b82f-da0defb9a5d6;IngestionEndpoint=https://southafricanorth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://southafricanorth.livediagnostics.monitor.azure.com/',
+      enableAutoRouteTracking: true,
+    disableAjaxTracking: false,
+    autoTrackPageVisitTime: true,
+    enableCorsCorrelation: true,
+    enableRequestHeaderTracking: true,
+    enableResponseHeaderTracking: true,
+    extensions: [reactPlugin],
+        extensionConfig: {
+          [reactPlugin.identifier]: { history: browserHistory }
+        }
+    }
+});
+appInsights.loadAppInsights();
 
 
 
@@ -93,7 +115,7 @@ render() {
         <label  id="usernamelabel" ref={this.usernamelabel} class="btn btn-success d-none" ></label>
       </div>
 
-        <h2>Employees Data...</h2>
+        <h2>Employees Data v2...</h2>
         <table>
           <thead>
             <tr>
@@ -120,6 +142,7 @@ render() {
     }
   
 }
+export default withAITracking(reactPlugin, EmployeeComponent);
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
